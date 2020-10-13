@@ -13,39 +13,44 @@ I need this code, but don't know where, perhaps should make some middleware, don
 Go code!
 */
 const express = require("express")
-const actionRouter = require('./data/helpers/actionsRouter');
 const projectRouter = require('./data/helpers/projectRouter')
+const morgan = require("morgan");
 
-const port = 4000;
 const server = express();
+// const port = 4000;
+require('dotenv').config(); 
 
-function time (req, res, next) {
-    const time = new Date().toISOString()
-    console.log(`[${time}] ${req.ip} ${req.method} ${req.url}`)
-    next()
-  }
-  server.use(time);
+// this is custom morgan middleware
+// function time (req, res, next) {
+//     const time = new Date().toISOString()
+//     console.log(`[${time}] ${req.ip} ${req.method} ${req.url}`)
+//     next()
+//   }
 
-  // server.use('/api/action', actionRouter)
-server.use('/api/project', projectRouter)
 
-  
+// server.use('/api/action', actionRouter)
+server.use('/user', projectRouter)
+
+
 
 server.use(express.json())
+server.use(morgan("combined"))
 
+
+server.get('/', (req, res) => {
+  res.send(`<h2>Hello sprint </h2>`);
+});
+
+    // this is error middleware
 server.use((err, req, res, next) => {
-    console.log(err)
-    res.status(500).json({
-      message: "Something went wrong, please try again later",
-    })
+  console.log(err)
+  res.status(500).json({
+    message: "Something went wrong, please try again later",
   })
+})
 
-  server.get('/', (req, res) => {
-    res.send(`<h2>node sprint </h2>`);
-  });
+const port =process.env.PORT||4000
 
-
-// const port =process.send.PORT||4000
 server.listen(port, () => {
-	console.log(`Server running at http://localhost:${port}`)
+  console.log(`Server running at http://localhost:${port}`)
 })

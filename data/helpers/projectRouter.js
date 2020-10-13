@@ -1,13 +1,13 @@
 const express = require('express');
-const actionData = require("./projectModel");
-const { validateUserId, validateUser} = require("../middleware/users")
+const projectData = require("./projectModel");
+const { validateUserId, validateUser} = require("../middleware/projectMiddleWare")
 const router =express.Router();
 
-router.post('/', validateUser(), validateUserId(),(req, res) => {
+router.post('/', validateUser(),(req, res) => {
   
-    actionData.insert(req.body)
-          .then(data => {
-                  res.status(201).json(data)
+    projectData.insert(req.body)
+          .then((add) => {
+                  res.status(201).json(add)
               })
           .catch((error) => {
               console.log(error)
@@ -18,9 +18,9 @@ router.post('/', validateUser(), validateUserId(),(req, res) => {
   });
 
   router.get('/', (req, res) => {
-    data.get()
-    .then(data=>{
-        res.status(200).json(data)
+    projectData.get()
+    .then((user)=>{
+        res.status(200).json(user)
     }) 
           .catch((error) => {
               next(error)
@@ -35,10 +35,10 @@ router.post('/', validateUser(), validateUserId(),(req, res) => {
 
   router.put('/:id', validateUser(), validateUserId(), (req, res) => {
     
-    users.update(req.params.id, req.body)
-          .then((user) => {
-              if (user) {
-                  res.status(200).json(user)
+   projectData.update(req.params.id, req.body)
+          .then((update) => {
+              if (update) {
+                  res.status(200).json(update)
               } else {
                   res.status(404).json({
                       message: "The user could not be found",
@@ -50,13 +50,13 @@ router.post('/', validateUser(), validateUserId(),(req, res) => {
           })
   });
   
-  router.delete('/:id',validateUserId(), (req, res) => {
+  router.delete('/:id', (req, res) => {
    
-    users.remove(req.params.id)
-          .then((count) => {
-              if (count > 0) {
+    projectData.remove(req.params.id)
+          .then((remove) => {
+              if (remove > 0) {
                   res.status(200).json({
-                      message: "The user has been nuked",
+                      message: "The user has been removed",
                   })
               } else {
                   res.status(404).json({
